@@ -1,0 +1,224 @@
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+    }
+
+    body {
+        background-color: #f8f9fa;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+        min-height: 100vh;
+        padding: 80px 0px 20px;
+    }
+
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Navbar styles - Colores principales (#6e48aa a #9d50bb) */
+    .navbar {
+        background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+        padding: 15px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Container styles - Armonizado con colores secundarios */
+    .container {
+        background: #fff;
+        width: 100%;
+        max-width: 450px;
+        padding: 2.5rem;
+        border-radius: 15px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.4s ease, opacity 0.4s ease;
+        margin-bottom: 30px;
+        margin-top: 30px;
+    }
+
+    .container::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, #6e48aa, #9d50bb);
+    }
+
+    .welcome-message {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 1.2rem;
+        background: linear-gradient(90deg, #6e48aa, #9d50bb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Form elements - Colores complementarios */
+    .input-group i {
+        color: #9d50bb;
+    }
+
+    input:focus {
+        border-color: #9d50bb;
+        box-shadow: 0 0 0 3px rgba(157, 80, 187, 0.15);
+    }
+
+    .btn {
+        background: linear-gradient(90deg, #6e48aa, #9d50bb);
+    }
+
+    .btn::before {
+        background: linear-gradient(90deg, #5a3a8f, #7d40a0);
+    }
+
+    .or:before,
+    .or:after {
+        background: linear-gradient(90deg, transparent, #9d50bb, transparent);
+    }
+
+    .signup-link button {
+        color: #6e48aa;
+    }
+
+    .signup-link button:hover {
+        color: #5a3a8f;
+    }
+
+    .signup-link button::after {
+        background: #9d50bb;
+    }
+
+    /* Courses Section - Armonía con colores principales */
+    .courses-header {
+        background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+        color: white;
+        text-align: center;
+        padding: 60px 20px;
+        margin-top: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Course Cards - Diseño actualizado */
+    .course-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+        padding: 20px;
+    }
+
+    .course-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(110, 72, 170, 0.1);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border-top: 4px solid #9d50bb;
+    }
+
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(110, 72, 170, 0.2);
+    }
+
+    .course-image {
+        height: 180px;
+        background: linear-gradient(135deg, rgba(110, 72, 170, 0.8) 0%, rgba(157, 80, 187, 0.8) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .course-info {
+        padding: 20px;
+    }
+
+    .course-info h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+    }
+
+    .course-info p {
+        color: #7f8c8d;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    .course-meta {
+        display: flex;
+        justify-content: space-between;
+        color: #6e48aa;
+        font-size: 0.9rem;
+    }
+
+    /* Modal Styles - Coherencia con paleta */
+    .modal-content {
+        border-top: 4px solid #9d50bb;
+    }
+
+    .section-item {
+        border-left: 4px solid #6e48aa;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .course-cards {
+            grid-template-columns: 1fr;
+        }
+        
+        .navbar {
+            padding: 15px 20px;
+        }
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-animation {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    /* Error messages */
+    .error-message {
+        color: #e74c3c;
+        font-size: 0.85rem;
+        text-align: left;
+        margin-top: 5px;
+        display: none;
+    }

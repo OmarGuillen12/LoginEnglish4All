@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Listening Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos anteriores se mantienen igual */
+        :root {
+            --bg: #f8f9fa;
+            --panel: #ffffff;
+            --panel-2: #f1f3f5;
+            --text: #333333;
+            --muted: #666666;
+            --brand: #6e48aa;
+            --acc: #01b1a7;
+            --danger: #ef4444;
+            --shadow: 0 10px 30px rgba(0,0,0,.1);
+            --radius: 12px;
+            --border: 1px solid #e1e5eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            color: var(--text);
+        }
+
+        .container {
+            background: var(--panel);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: var(--border);
+            width: 100%;
+            max-width: 600px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--brand);
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .audio-container {
+            background: var(--panel-2);
+            border-radius: var(--radius);
+            padding: 18px;
+            margin-bottom: 20px;
+            border: var(--border);
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        button {
+            border: 0;
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            background: var(--panel);
+            color: var(--text);
+            border: var(--border);
+            cursor: pointer;
+            font-family: "Poppins", sans-serif;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #e9ecef;
+        }
+
+        button:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+            transform: none;
+            color: var(--muted);
+        }
+
+        .btn.brand {
+            background: linear-gradient(90deg, #6e48aa, #9d50bb);
+            color: white;
+            border: none;
+        }
+
+        .btn.brand:hover {
+            background: linear-gradient(90deg, #5d3a99, #8d40ab);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(110, 72, 170, 0.2);
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background: var(--panel);
+            border: var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            text-align: left;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            border-color: var(--brand);
+        }
+
+        .option.selected {
+            background: linear-gradient(90deg, #6e48aa, #9d50bb);
+            color: white;
+            border-color: #5d3a99;
+        }
+
+        .option.correct {
+            background: var(--acc);
+            color: white;
+            border-color: #019990;
+        }
+
+        .option.incorrect {
+            background: var(--danger);
+            color: white;
+            border-color: #dc2626;
+        }
+
+        .feedback {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 15px 0;
+            min-height: 25px;
+        }
+
+        .score {
+            font-size: 16px;
+            color: var(--text);
+            margin-top: 20px;
+            background: var(--panel-2);
+            padding: 10px;
+            border-radius: var(--radius);
+            border: var(--border);
+        }
+
+        .next-button {
+            background: linear-gradient(90deg, var(--acc), #02c8bd);
+            color: white;
+            margin-top: 15px;
+            padding: 12px 24px;
+            font-size: 15px;
+            border: none;
+        }
+
+        .next-button:hover {
+            background: linear-gradient(90deg, #019990, #02b1a7);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(1, 177, 167, 0.2);
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: var(--radius);
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: linear-gradient(90deg, #6e48aa, #9d50bb);
+            border-radius: var(--radius);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .instructions {
+            background: var(--panel-2);
+            border-left: 4px solid var(--brand);
+            padding: 14px;
+            margin: 20px 0;
+            text-align: left;
+            border-radius: 4px;
+            font-size: 14px;
+            color: var(--muted);
+            border: var(--border);
+        }
+
+        .loading {
+            color: var(--muted);
+            font-style: italic;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 18px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .player-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>English Listening Game</h1>
+        
+        <div class="instructions">
+            <p><strong>Instrucciones:</strong> Escucha el audio y selecciona la opción que mejor describa lo que has escuchado. Utiliza los controles para pausar, reiniciar o cambiar de audio.</p>
+        </div>
+        
+        <div class="audio-container">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="player-controls">
+                <button id="play-btn" class="btn brand">
+                    <i>▶</i> Reproducir
+                </button>
+                <button id="pause-btn" disabled>
+                    <i>⏸</i> Pausar
+                </button>
+                <button id="restart-btn" disabled>
+                    <i>↺</i> Reiniciar
+                </button>
+                <button id="next-audio-btn" class="btn brand">
+                    <i>⏭</i> Otro audio
+                </button>
+            </div>
+        </div>
+        
+        <div class="options-container" id="options-container">
+            <div class="loading" id="loading-message">Cargando opciones...</div>
+        </div>
+        
+        <div class="feedback" id="feedback"></div>
+        
+        <button id="next-btn" class="next-button" style="display: none;">
+            Siguiente Pregunta
+        </button>
+        
+        <div class="score" id="score">Puntuación: 0</div>
+    </div>
+
+    <script>
+        // Variables del juego
+        let audioDatabase = [];
+        let currentAudioIndex = -1;
+        let score = 0;
+        let optionSelected = false;
+        let speech = null;
+        let progressInterval = null;
+
+        // Elementos del DOM
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackElement = document.getElementById('feedback');
+        const nextButton = document.getElementById('next-btn');
+        const playButton = document.getElementById('play-btn');
+        const pauseButton = document.getElementById('pause-btn');
+        const restartButton = document.getElementById('restart-btn');
+        const nextAudioButton = document.getElementById('next-audio-btn');
+        const scoreElement = document.getElementById('score');
+        const progressBar = document.getElementById('progress-bar');
+        const loadingMessage = document.getElementById('loading-message');
+
+        // Función para cargar datos desde la base de datos
+        async function loadAudioData() {
+            try {
+                const response = await fetch('audio_game.php');
+                audioDatabase = await response.json();
+                
+                if (audioDatabase.length > 0) {
+                    loadingMessage.style.display = 'none';
+                    loadRandomAudio();
+                } else {
+                    loadingMessage.textContent = 'No hay datos disponibles.';
+                }
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                loadingMessage.textContent = 'Error al cargar los datos.';
+            }
+        }
+
+        // Función para cargar un audio aleatorio
+        function loadRandomAudio() {
+            // Detener cualquier audio en reproducción
+            if (speech && window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+            }
+            
+            clearInterval(progressInterval);
+            progressBar.style.width = '0%';
+            
+            // Verificar si hay datos
+            if (audioDatabase.length === 0) {
+                feedbackElement.textContent = 'No hay datos disponibles.';
+                return;
+            }
+            
+            // Seleccionar un índice aleatorio diferente al actual
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * audioDatabase.length);
+            } while (newIndex === currentAudioIndex && audioDatabase.length > 1);
+            
+            currentAudioIndex = newIndex;
+            const audioData = audioDatabase[currentAudioIndex];
+            
+            // Preparar las opciones
+            const allOptions = [audioData.correctOption, ...audioData.wrongOptions];
+            // Mezclar las opciones
+            shuffleArray(allOptions);
+            
+            // Limpiar opciones anteriores
+            optionsContainer.innerHTML = '';
+            
+            // Crear botones de opciones
+            allOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectOption(optionElement, option, audioData.correctOption));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Reiniciar estado de la interfaz
+            feedbackElement.textContent = '';
+            feedbackElement.style.color = '';
+            nextButton.style.display = 'none';
+            optionSelected = false;
+            
+            // Habilitar/deshabilitar botones
+            playButton.disabled = false;
+            pauseButton.disabled = true;
+            restartButton.disabled = true;
+        }
+
+        // Función para reproducir el audio
+        function playAudio() {
+            if (speech && window.speechSynthesis.speaking) {
+                window.speechSynthesis.resume();
+            } else {
+                const audioData = audioDatabase[currentAudioIndex];
+                speech = new SpeechSynthesisUtterance(audioData.text);
+                speech.lang = 'en-US';
+                speech.rate = 0.9; // Velocidad ligeramente reducida para mejor comprensión
+                
+                // Iniciar barra de progreso
+                progressBar.style.width = '0%';
+                const startTime = Date.now();
+                const estimatedDuration = audioData.text.length * 60; // Estimación de duración
+                
+                progressInterval = setInterval(() => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(100, (elapsed / estimatedDuration) * 100);
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                    }
+                }, 100);
+                
+                speech.onend = function() {
+                    clearInterval(progressInterval);
+                    progressBar.style.width = '100%';
+                    pauseButton.disabled = true;
+                    restartButton.disabled = true;
+                    playButton.disabled = false;
+                };
+                
+                window.speechSynthesis.speak(speech);
+            }
+            
+            playButton.disabled = true;
+            pauseButton.disabled = false;
+            restartButton.disabled = false;
+        }
+
+        // Función para pausar el audio
+        function pauseAudio() {
+            if (speech && window.speechSynthesis.speaking) {
+                window.speechSynthesis.pause();
+                playButton.disabled = false;
+                pauseButton.disabled = true;
+            }
+        }
+
+        // Función para reiniciar el audio
+        function restartAudio() {
+            if (speech) {
+                window.speechSynthesis.cancel();
+                playAudio();
+            }
+        }
+
+        // Función para mezclar array (algoritmo Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Función para seleccionar una opción
+        function selectOption(optionElement, selectedOption, correctOption) {
+            if (optionSelected) return;
+            
+            optionSelected = true;
+            const allOptions = document.querySelectorAll('.option');
+            
+            // Deshabilitar todas las opciones
+            allOptions.forEach(opt => {
+                opt.style.cursor = 'not-allowed';
+            });
+            
+            // Marcar la opción seleccionada
+            optionElement.classList.add('selected');
+            
+            // Comprobar si es correcta
+            if (selectedOption === correctOption) {
+                optionElement.classList.add('correct');
+                feedbackElement.textContent = '¡Correcto! 🎉';
+                feedbackElement.style.color = '#019990';
+                score++;
+            } else {
+                optionElement.classList.add('incorrect');
+                feedbackElement.textContent = 'Incorrecto. 😢 La respuesta correcta era: ' + correctOption;
+                feedbackElement.style.color = '#dc2626';
+                
+                // Resaltar la opción correcta
+                allOptions.forEach(opt => {
+                    if (opt.textContent === correctOption) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            
+            // Actualizar puntuación
+            scoreElement.textContent = `Puntuación: ${score}`;
+            
+            // Mostrar botón para siguiente pregunta
+            nextButton.style.display = 'inline-block';
+            
+            // Pausar el audio si está sonando
+            if (speech && window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+                clearInterval(progressInterval);
+                progressBar.style.width = '0%';
+                playButton.disabled = false;
+                pauseButton.disabled = true;
+                restartButton.disabled = true;
+            }
+        }
+
+        // Event Listeners
+        nextButton.addEventListener('click', loadRandomAudio);
+        playButton.addEventListener('click', playAudio);
+        pauseButton.addEventListener('click', pauseAudio);
+        restartButton.addEventListener('click', restartAudio);
+        nextAudioButton.addEventListener('click', loadRandomAudio);
+
+        // Inicializar el juego cargando datos desde la base de datos
+        loadAudioData();
+    </script>
+</body>
+</html>

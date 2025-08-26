@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Práctica de Inglés — Chat de Situaciones</title>
+<style>
+:root {
+  --bg: #f8f9fa;
+  --panel: #ffffff;
+  --panel-2: #f1f3f5;
+  --text: #333333;
+  --muted: #666666;
+  --brand: #6e48aa;
+  --acc: #01b1a7;
+  --danger: #ef4444;
+  --shadow: 0 10px 30px rgba(0,0,0,.1);
+  --radius: 12px;
+  --border: 1px solid #e1e5eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+  color: var(--text);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.app {
+  width: 100%;
+  max-width: 1100px;
+  height: 88vh;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 320px 1fr;
+}
+
+.card {
+  background: var(--panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: var(--border);
+}
+
+.sidebar {
+  padding: 18px;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: 14px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.badge {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--panel-2);
+  color: var(--text);
+  border: var(--border);
+  border-radius: var(--radius);
+  font-family: "Poppins", sans-serif;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.btn {
+  border: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--panel-2);
+  color: var(--text);
+  border: var(--border);
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  background: #e9ecef;
+}
+
+.btn.brand {
+  background: linear-gradient(90deg, #6e48aa, #9d50bb);
+  color: white;
+  border: none;
+}
+
+.btn.brand:hover {
+  background: linear-gradient(90deg, #5d3a99, #8d40ab);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(110, 72, 170, 0.2);
+}
+
+.btn.ghost {
+  background: transparent;
+  border: 1px dashed #adb5bd;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.panel {
+  padding: 14px;
+  border-radius: var(--radius);
+  background: var(--panel-2);
+  border: var(--border);
+}
+
+.panel h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--brand);
+}
+
+.chat {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+}
+
+.chat-header {
+  padding: 14px 18px;
+  border-bottom: var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+  color: white;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.chat-title {
+  font-weight: 700;
+  color: white;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-size: 12px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.1);
+}
+
+.chat-log {
+  padding: 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 100%;
+  background: var(--panel-2);
+}
+
+.msg {
+  max-width: 72%;
+  padding: 12px 14px;
+  border-radius: 16px;
+  line-height: 1.45;
+  border: var(--border);
+}
+
+.bot {
+  align-self: flex-start;
+  background: white;
+  border-top-left-radius: 4px;
+}
+
+.user {
+  align-self: flex-end;
+  background: rgba(110, 72, 170, 0.1);
+  border-top-right-radius: 4px;
+  border: 1px solid rgba(110, 72, 170, 0.2);
+}
+
+.meta {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.composer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  padding: 12px;
+  border-top: var(--border);
+  background: white;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: var(--border);
+  background: white;
+  color: var(--text);
+  font-family: "Poppins", sans-serif;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(110, 72, 170, 0.15);
+}
+
+.quick-replies {
+  display: flex;
+  gap: 8px;
+  padding: 0 18px 12px;
+  flex-wrap: wrap;
+  background: white;
+}
+
+.qr {
+  font-size: 12px;
+  background: transparent;
+  color: var(--brand);
+  border: 1px dashed var(--brand);
+  border-radius: 999px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.qr:hover {
+  background: rgba(110, 72, 170, 0.1);
+}
+
+.glossary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.token {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #e1e5eb;
+  background: white;
+  color: var(--brand);
+}
+
+@media (max-width: 980px) {
+  .app {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .chat {
+    height: 74vh;
+  }
+}
+</style>
+</head>
+<body>
+<!-- El resto del HTML permanece igual -->
+<div class="app">
+<!-- Sidebar -->
+<aside class="sidebar card">
+  <div class="brand">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2l3 6 6 .5-4.5 4 1.3 6.5L12 16l-5.8 3.9L7.5 12 3 8.5 9 8l3-6z" stroke="white" stroke-opacity=".9" fill="#6e48aa"/>
+    </svg>
+    <div>
+      <div><strong>Práctica de Inglés</strong></div>
+      <div class="badge">Situaciones cotidianas</div>
+    </div>
+  </div>
+  <div>
+    <label for="scenario" class="badge">Escenario</label>
+    <select id="scenario" class="select"></select>
+  </div>
+  <div class="panel">
+    <h4>Objetivo del escenario</h4>
+    <div id="goal" class="hint">Selecciona un escenario para ver el objetivo.</div>
+  </div>
+  <div class="panel">
+    <h4>Glosario útil</h4>
+    <div id="glossary" class="glossary"></div>
+  </div>
+  <div class="row">
+    <button id="resetBtn" class="btn ghost">Reiniciar</button>
+    <button id="hintBtn" class="btn">Pedir pista</button>
+  </div>
+  <div class="hint">Sugerencia: escribe en <strong>inglés</strong>. El sistema entiende variaciones y te corrige con tacto. <br/>Opcional: añade <code>/translate</code> al principio para ver traducción sugerida. </div>
+</aside>
+
+<!-- Chat -->
+<section class="chat card">
+  <div class="chat-header">
+    <div>
+      <div class="chat-title">Chat de práctica</div>
+      <div id="subtitle" class="badge">Elige un escenario para empezar</div>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div id="log" class="chat-log"></div>
+  <div id="quickReplies" class="quick-replies"></div>
+  <div class="composer">
+    <input id="text" class="input" placeholder="Escribe tu mensaje en inglés... (Enter para enviar)" />
+    <button id="send" class="btn brand">Enviar</button>
+  </div>
+</section>
+</div>
+
+<script>
+// El script permanece igual
+const SCENARIOS = {
+  supermarket: {
+    title: "En el supermercado",
+    goal: "Pedir ayuda para encontrar productos, preguntar precios y pagar.",
+    glossary: ["aisle (pasillo)", "cart (carrito)", "checkout (caja)", "price tag (etiqueta)", "discount (descuento)", "receipt (recibo)"],
+    opening: [
+      "Hello! Where can I find the bread?",
+      "Excuse me, is this on sale?",
+      "Do you have almond milk?"
+    ],
+    quick: ["Where is the...", "How much is this?", "Do you accept cards?"],
+    intents: [
+      { match: /where (can|do) i find|where is the/i, reply: (u) => `Aisle 5 for bread. Anything else I can help you with?` },
+      { match: /how much|price/i, reply: () => `It's $3.49. Would you like a bag?` },
+      { match: /do you have .*milk/i, reply: () => `Yes, we have almond and oat milk in the dairy section.` },
+      { match: /checkout|pay|card|cash/i, reply: () => `You can pay at the self-checkout or with me here. Do you need a receipt?` },
+    ]
+  },
+  restaurant: {
+    title: "En el restaurante/cafetería",
+    goal: "Pedir comida/bebida, preguntar recomendaciones y manejar la cuenta.",
+    glossary: ["menu (menú)", "starter (entrada)", "main course (plato fuerte)", "dessert (postre)", "bill/check (cuenta)", "tip (propina)"],
+    opening: [
+      "Hi, table for two, please.",
+      "Could I see the menu?",
+      "What do you recommend?"
+    ],
+    quick: ["I would like...", "Can I get the bill?", "Do you have vegetarian options?"],
+    intents: [
+      { match: /table for|reservation/i, reply: () => `Right this way. Would you like to sit inside or outside?` },
+      { match: /recommend|suggest/i, reply: () => `Our special today is grilled salmon with vegetables.` },
+      { match: /vegetarian|vegan/i, reply: () => `Yes, we have a veggie burger and a quinoa salad.` },
+      { match: /bill|check|pay/i, reply: () => `Here is your bill. Would you like to pay by card or cash?` },
+    ]
+  },
+  transit: {
+    title: "Transporte público",
+    goal: "Preguntar direcciones, horarios y comprar boletos.",
+    glossary: ["ticket (boleto)", "schedule (horario)", "platform (andén)", "transfer (transbordo)", "fare (tarifa)", "delay (retraso)"],
+    opening: [
+      "Excuse me, which platform is for the airport train?",
+      "Where can I buy a ticket?",
+      "What time is the next bus?"
+    ],
+    quick: ["Which platform?", "Where to buy a ticket?", "How long does it take?"],
+    intents: [
+      { match: /platform|track/i, reply: () => `Platform 2. The train arrives in 5 minutes.` },
+      { match: /ticket|buy/i, reply: () => `You can buy tickets at the machines or on the app.` },
+      { match: /what time|when.*next/i, reply: () => `The next bus is at 3:15 pm. It runs every 15 minutes.` },
+    ]
+  },
+  office: {
+    title: "Trabajo / Oficina",
+    goal: "Pedir/entregar tareas, coordinar reuniones y dar actualizaciones.",
+    glossary: ["deadline (fecha límite)", "meeting (reunión)", "report (informe)", "feedback (retroalimentación)", "shift (turno)", "overtime (horas extra)"],
+    opening: [
+      "Could we schedule a quick meeting?",
+      "Here is the report you asked for.",
+      "Do you have any feedback?"
+    ],
+    quick: ["Let's schedule a meeting", "I will send the report", "Any feedback?"],
+    intents: [
+      { match: /schedule|meeting|call/i, reply: () => `Sure, does 10:30 am work for you?` },
+      { match: /report|document/i, reply: () => `Thanks! I'll review it and get back to you today.` },
+      { match: /feedback|comments/i, reply: () => `Overall great work. Please expand the conclusions section.` },
+    ]
+  },
+  medical: {
+    title: "Médico / Farmacia",
+    goal: "Describir síntomas, pedir medicamentos y entender instrucciones.",
+    glossary: ["prescription (receta)", "symptom (síntoma)", "sore throat (dolor de garganta)", "cough (tos)", "fever (fiebre)", "dosage (dosis)"],
+    opening: [
+      "I have a sore throat and a cough.",
+      "Do I need a prescription for this?",
+      "How often should I take this?"
+    ],
+    quick: ["I have symptoms", "Do I need a prescription?", "How often should I take it?"],
+    intents: [
+      { match: /sore throat|cough|fever|headache/i, reply: () => `Please rest, drink water, and take this medicine every 8 hours.` },
+      { match: /prescription|rx/i, reply: () => `For antibiotics you need a prescription. For painkillers you don't.` },
+      { match: /how often|dosage|take this/i, reply: () => `Take one tablet every 8 hours after meals.` },
+    ]
+  },
+  airport: {
+    title: "En el aeropuerto",
+    goal: "Check-in, seguridad, abordar y resolver contratiempos.",
+    glossary: ["boarding pass (pase de abordar)", "gate (puerta)", "carry-on (equipaje de mano)", "checked bag (equipaje documentado)", "security (seguridad)", "delay (retraso)"],
+    opening: [
+      "Where can I check in?",
+      "What time does boarding start?",
+      "Is there a delay?"
+    ],
+    quick: ["Where is the gate?", "When is boarding?", "Is my flight delayed?"],
+    intents: [
+      { match: /check in|check-in/i, reply: () => `You can check in at counter 12 or use the kiosks.` },
+      { match: /gate|boarding/i, reply: () => `Your gate is B14. Boarding starts 40 minutes before departure.` },
+      { match: /delay|cancel/i, reply: () => `Your flight is on time. Please proceed to security.` },
+    ]
+  },
+  free: {
+    title: "Práctica libre",
+    goal: "Conversación abierta para cualquier tema diario.",
+    glossary: ["small talk (charla)", "opinion (opinión)", "plan (plan)", "hobby (pasatiempo)"],
+    opening: ["Let's chat! What's on your mind today?"],
+    quick: ["How's your day?", "Let's talk about hobbies", "Give me feedback"],
+    intents: []
+  }
+};
+
+const CORRECTIONS = [
+  // patrones simples para corrección amistosa (no reemplaza un tutor humano)
+  { pattern: /i am (\w+)/i, tip: (m) => `Tip: In casual English you can say "I'm ${m[1]}".` },
+  { pattern: /\bi dont\b/i, tip: () => "Tip: Use an apostrophe → I don't." },
+  { pattern: /\bcan i to\b/i, tip: () => 'Tip: Use the base verb after modal: "Can I go…", not "can I to go…".' },
+];
+
+const TRANSLATE_MINI = {
+  bread: "pan", milk: "leche", receipt: "recibo", gate: "puerta", 
+  ticket: "boleto", schedule: "horario", price: "precio", table: "mesa", 
+  bill: "cuenta", delay: "retraso", medicine: "medicina", cough: "tos"
+};
+
+// ─────────────────────────────────────────────
+// Utilidades UI
+// ─────────────────────────────────────────────
+const el = (sel) => document.querySelector(sel);
+const log = el('#log');
+
+function addMsg(text, who = 'bot', meta = '') {
+  const wrap = document.createElement('div');
+  wrap.className = `msg ${who}`;
+  wrap.innerHTML = `${escapeHtml(text)}${meta ? `<div class="meta">${meta}</div>` : ''}`;
+  log.appendChild(wrap);
+  log.scrollTop = log.scrollHeight;
+}
+
+function escapeHtml(str){
+  return str.replace(/[&<>]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[s]));
+}
+
+function setChips(list){
+  const chips = el('#chips');
+  chips.innerHTML='';
+  list.forEach(t => {
+    const c=document.createElement('div');
+    c.className='chip';
+    c.textContent=t;
+    chips.appendChild(c);
+  });
+}
+
+function setQuickReplies(list){
+  const box = el('#quickReplies');
+  box.innerHTML='';
+  list.forEach(t => {
+    const b=document.createElement('button');
+    b.className='qr';
+    b.textContent=t;
+    b.onclick=()=>sendUser(t);
+    box.appendChild(b);
+  });
+}
+
+function setGlossary(list){
+  const g = el('#glossary');
+  g.innerHTML='';
+  list.forEach(t => {
+    const s=document.createElement('span');
+    s.className='token';
+    s.textContent=t;
+    g.appendChild(s);
+  });
+}
+
+// ─────────────────────────────────────────────
+// Motor de diálogo sencillo
+// ─────────────────────────────────────────────
+let state = { scenario: null, turns: 0 };
+
+function pick(arr){
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function scenarioIntro(key){
+  const sc = SCENARIOS[key];
+  el('#subtitle').textContent = sc.title;
+  el('#goal').textContent = sc.goal;
+  setGlossary(sc.glossary);
+  setQuickReplies(sc.quick);
+  setChips(["A1–B1", "Role-play", sc.title]);
+  addMsg(pick(sc.opening), 'bot', 'Opening');
+  state.turns = 0;
+}
+
+function matchIntent(text){
+  const sc = SCENARIOS[state.scenario];
+  if(!sc) return null;
+  for(const intent of sc.intents){
+    const m = text.match(intent.match);
+    if(m) return typeof intent.reply === 'function' ? intent.reply(m) : intent.reply;
+  }
+  return null;
+}
+
+function correctionTip(text){
+  for(const c of CORRECTIONS){
+    const m = text.match(c.pattern);
+    if(m) return c.tip(m);
+  }
+  return null;
+}
+
+function translateMini(text){
+  const words = text.toLowerCase().split(/[^a-z]+/);
+  const hits = words.filter(w => TRANSLATE_MINI[w]).map(w => `${w} → ${TRANSLATE_MINI[w]}`);
+  return hits.length ? `Mini-diccionario: ${hits.join(', ')}` : '';
+}
+
+function botReply(userText){
+  // Comandos especiales
+  if(/^\/translate\b/i.test(userText)){
+    const clean = userText.replace(/^\/translate\s*/i,'');
+    return translateMini(clean) || 'No matches in mini-dictionary.';
+  }
+  
+  const scripted = matchIntent(userText);
+  if(scripted) return scripted;
+  
+  // Respuestas genéricas por escenario
+  const generic = {
+    supermarket: [
+      "You can also check the price on the shelf label.",
+      "Let me show you the dairy section.",
+      "We have a discount on fruits today."
+    ],
+    restaurant: [
+      "Would you like still or sparkling water?",
+      "Your order will be ready in about 10 minutes.",
+      "Any allergies I should know about?"
+    ],
+    transit: [
+      "You can tap your card when you board.",
+      "There is a transfer at Central Station.",
+      "This line runs every 10 minutes."
+    ],
+    office: [
+      "Please share the slides before the meeting.",
+      "Let's align on the deadline.",
+      "Could you send me an update by noon?"
+    ],
+    medical: [
+      "Do you have any allergies?",
+      "Please describe your pain from 1 to 10.",
+      "You should rest and stay hydrated."
+    ],
+    airport: [
+      "Please place laptops and liquids in a separate tray.",
+      "Your seat is 14C, aisle.",
+      "Boarding will start soon; please wait near the gate."
+    ],
+    free: [
+      "Tell me about your weekend plans.",
+      "What's your favorite food and why?",
+      "Let's practice small talk at work."
+    ]
+  };
+  return pick(generic[state.scenario] || generic.free);
+}
+
+function sendUser(text){
+  const t = text || el('#text').value.trim();
+  if(!t) return;
+  el('#text').value = '';
+  addMsg(t, 'user');
+  
+  const tip = correctionTip(t);
+  const trans = translateMini(t);
+  const reply = botReply(t);
+  const meta = [tip, trans].filter(Boolean).join(' · ');
+  addMsg(reply, 'bot', meta);
+  state.turns++;
+}
+
+// ─────────────────────────────────────────────
+// Inicialización UI
+// ─────────────────────────────────────────────
+const select = el('#scenario');
+const opts = [
+  ['supermarket','Supermercado'],
+  ['restaurant','Restaurante/Cafetería'],
+  ['transit','Transporte público'],
+  ['office','Trabajo/Oficina'],
+  ['medical','Médico/Farmacia'],
+  ['airport','Aeropuerto'],
+  ['free','Práctica libre']
+];
+opts.forEach(([v,l])=>{
+  const op=document.createElement('option');
+  op.value=v;
+  op.textContent=l;
+  select.appendChild(op);
+});
+
+select.addEventListener('change', (e)=>{
+  state.scenario = e.target.value;
+  log.innerHTML = '';
+  scenarioIntro(state.scenario);
+});
+
+el('#send').addEventListener('click', ()=> sendUser());
+el('#text').addEventListener('keydown', (e)=>{
+  if(e.key==='Enter' && !e.shiftKey){
+    e.preventDefault();
+    sendUser();
+  }});
+
+el('#resetBtn').addEventListener('click', ()=>{
+  log.innerHTML='';
+  if(state.scenario) scenarioIntro(state.scenario);
+});
+
+el('#hintBtn').addEventListener('click', ()=>{
+  const sc = SCENARIOS[state.scenario] || SCENARIOS.free;
+  addMsg('Try saying: '+ pick(sc.opening), 'bot', 'Hint');
+});
+
+// Estado inicial
+state.scenario = 'free';
+scenarioIntro('free');
+</script>
+</body>
+</html>
